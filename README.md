@@ -58,7 +58,7 @@ Update your Gemini configuration to include the `google-ads-mcp` server. The fol
       "args": [
         "run",
         "--spec",
-        "git+https://github.com/googleanalytics/google-analytics-mcp.git",
+        "git+https://github.com/google-marketing-solutions/google_ads_mcp.git",
         "run-mcp-server"
       ],
       "env": {
