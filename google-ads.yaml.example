@@ -1,0 +1,18 @@
+# Google Ads API Configuration for Production
+# Copy this file to google-ads.yaml and fill in your actual credentials
+
+# Your Google Ads API Developer Token
+developer_token: "YOUR_DEVELOPER_TOKEN_HERE"
+
+# OAuth2 Client Credentials (from Google Cloud Console)
+client_id: "YOUR_CLIENT_ID.apps.googleusercontent.com"
+client_secret: "YOUR_CLIENT_SECRET"
+
+# Optional: Login Customer ID (for MCC accounts)
+# login_customer_id: "1234567890"
+
+# Optional: Use sandbox environment for testing
+# use_proto_plus: true
+
+# NOTE: refresh_token is passed dynamically via MCP tool parameters
+# No need to configure it here for multi-client architecture

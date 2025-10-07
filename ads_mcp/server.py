@@ -12,45 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The server for the Google Ads API MCP."""
+"""Google Ads MCP Server - Cloud Run compatible implementation."""
+
 import asyncio
+import sys
 import os
 
-from ads_mcp.coordinator import mcp_server
-from ads_mcp.scripts.generate_views import update_views_yaml
-from ads_mcp.tools import api
-from ads_mcp.tools import docs
-
-import dotenv
-from fastmcp.server.auth.providers.google import GoogleProvider
-from fastmcp.server.auth.providers.google import GoogleTokenVerifier
-
-
-dotenv.load_dotenv()
-
-
-tools = [api, docs]
-
-if os.getenv("USE_GOOGLE_OAUTH_ACCESS_TOKEN"):
-  mcp_server.auth = GoogleTokenVerifier()
-
-if os.getenv("FASTMCP_SERVER_AUTH_GOOGLE_CLIENT_ID") and os.getenv(
-    "FASTMCP_SERVER_AUTH_GOOGLE_CLIENT_SECRET"
-):
-  base_url = os.getenv("FASTMCP_SERVER_BASE_URL", "http://localhost:8000")
-  mcp_server.auth = GoogleProvider(
-      base_url=base_url,
-      required_scopes=["https://www.googleapis.com/auth/adwords"],
-  )
-
-
 def main():
-  """Initializes and runs the MCP server."""
-  asyncio.run(update_views_yaml())  # Check and update docs resource
-  api.get_ads_client()  # Check Google Ads credentials
-  print("mcp server starting...")
-  mcp_server.run(transport="streamable-http")  # Initialize and run the server
+    """Initialize and run the MCP server."""
+    
+    # Update views YAML if available
+    try:
+        from ads_mcp.scripts.generate_views import update_views_yaml
+        asyncio.run(update_views_yaml())
+        print("Views YAML updated successfully", file=sys.stderr)
+    except Exception as e:
+        print(f"Views YAML update skipped: {e}", file=sys.stderr)
+    
+    # Import tools to register them with MCP server
+    import ads_mcp.tools.api  # This registers the @mcp_server.tool() functions
+    import ads_mcp.tools.docs  # This registers documentation tools
+    from ads_mcp.coordinator import mcp_server
+    
+    print("🚀 Google Ads MCP Server Started", file=sys.stderr)
+    print("Available MCP tools:", file=sys.stderr)
+    print("- list_accessible_accounts", file=sys.stderr)  
+    print("- execute_gaql", file=sys.stderr)
+    
+    # Check if running in Cloud Run (has PORT environment variable)
+    port = os.environ.get('PORT', 8080)
+    if os.environ.get('PORT'):
+        print(f"Running in Cloud Run mode on port {port}", file=sys.stderr)
+        print("Starting FastMCP with streamable-http transport", file=sys.stderr)
+        # Use FastMCP's native async HTTP transport (official Google Cloud approach)
+        # This is the recommended way for Cloud Run deployment
+        asyncio.run(
+            mcp_server.run_async(
+                transport="streamable-http",
+                host="0.0.0.0",
+                port=int(port)
+            )
+        )
+    else:
+        print("Running in local MCP mode", file=sys.stderr)
+        # Run as pure MCP server for local development
+        mcp_server.run()
 
 
 if __name__ == "__main__":
-  main()
+    main()
