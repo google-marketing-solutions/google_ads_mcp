@@ -1,0 +1,66 @@
+# YouTube Shorts Intelligence Platform - Requirements
+
+# Core Dependencies
+python>=3.8
+
+# Async Runtime
+asyncio-throttle==1.0.1
+
+# HTTP Clients
+aiohttp==3.9.1
+requests==2.31.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.2
+
+# Date/Time Handling
+python-dateutil==2.8.2
+
+# YouTube API Client (optional - for production)
+google-api-python-client==2.110.0
+google-auth==2.25.2
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+
+# Anthropic API Client (optional - for production)
+anthropic==0.8.1
+
+# Databricks SDK (optional - for production)
+databricks-sdk==0.15.0
+databricks-connect==13.3.0
+
+# Web Scraping (optional - for enhanced data collection)
+playwright==1.40.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# Sentiment Analysis (optional - for comment analysis)
+textblob==0.17.1
+vaderSentiment==3.3.2
+
+# Data Validation
+pydantic==2.5.3
+
+# Logging & Monitoring
+structlog==23.2.0
+
+# Configuration Management
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Testing (development only)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+
+# Code Quality (development only)
+black==23.12.1
+flake8==6.1.0
+mypy==1.8.0
+isort==5.13.2
+
+# Development Tools
+ipython==8.19.0
+jupyter==1.0.0

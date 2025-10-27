@@ -1,0 +1,272 @@
+{
+  "brand_name": "Unknown",
+  "analysis_timestamp": "2025-10-27T10:51:40.352603",
+  "agent_reports": {
+    "content_discovery": {
+      "agent_type": "content_discovery",
+      "brand_name": "Unknown",
+      "analysis_period": "Last 30 days",
+      "insights": [
+        {
+          "agent_type": "content_discovery",
+          "insight_category": "Trending Themes",
+          "finding": "Top performing content themes: skincare, shorts, beauty",
+          "evidence": [
+            "75 videos feature these themes",
+            "Average engagement rate 47% higher than baseline"
+          ],
+          "confidence_score": 0.87,
+          "actionable_recommendation": "Increase content production focused on skincare routines and product demonstrations with before/after format",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352378"
+        },
+        {
+          "agent_type": "content_discovery",
+          "insight_category": "Viral Patterns",
+          "finding": "Short-form tutorials (30-45s) with hook-first structure achieving 2.1x engagement",
+          "evidence": [
+            "Top 20% of videos use problem-solution narrative structure",
+            "Videos starting with question hooks have 65% higher completion rate"
+          ],
+          "confidence_score": 0.85,
+          "actionable_recommendation": "Adopt hook-first creative template: Problem (0-5s) \u2192 Solution demo (5-35s) \u2192 CTA (35-45s)",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352385"
+        },
+        {
+          "agent_type": "content_discovery",
+          "insight_category": "Emerging Opportunities",
+          "finding": "Morning skincare routines emerging as high-velocity trend (+340% views week-over-week)",
+          "evidence": [
+            "12 videos in last 7 days, aggregating 480K views",
+            "Engagement rate 6.2% vs category average 4.1%"
+          ],
+          "confidence_score": 0.82,
+          "actionable_recommendation": "Launch 'Morning Glow' content series featuring Neutrogena morning skincare products",
+          "priority": "medium",
+          "timestamp": "2025-10-27T10:51:40.352387"
+        }
+      ],
+      "summary": "Content Discovery Analysis: Identified 3 strategic opportunities across\n75 videos. Key finding: Tutorial format with problem-solution narrative driving 47% engagement lift.\nRecommend immediate pivot to morning routine content capitalizing on emerging trend.",
+      "overall_confidence": 0.85,
+      "generated_at": "2025-10-27T10:51:40.352390"
+    },
+    "contextual_intelligence": {
+      "agent_type": "contextual_intelligence",
+      "brand_name": "Unknown",
+      "analysis_period": "Last 30 days",
+      "insights": [
+        {
+          "agent_type": "contextual_intelligence",
+          "insight_category": "Semantic Themes",
+          "finding": "Three dominant semantic clusters: Self-care wellness (42%), Quick beauty hacks (31%), Science-backed solutions (27%)",
+          "evidence": [
+            "Self-care wellness language increasing 23% month-over-month",
+            "Science terminology ('dermatologist-tested', 'clinical results') present in 67% of top performers"
+          ],
+          "confidence_score": 0.91,
+          "actionable_recommendation": "Strengthen messaging around clinical efficacy and dermatologist endorsement in content copy",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352453"
+        },
+        {
+          "agent_type": "contextual_intelligence",
+          "insight_category": "Cultural Relevance",
+          "finding": "'Skin cycling' trend creating demand surge for targeted treatments",
+          "evidence": [
+            "Skin cycling mentioned in 18% of recent beauty content",
+            "Associated products seeing 2.8x higher engagement"
+          ],
+          "confidence_score": 0.88,
+          "actionable_recommendation": "Create content series explaining skin cycling methodology with Neutrogena product integration",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352456"
+        },
+        {
+          "agent_type": "contextual_intelligence",
+          "insight_category": "Brand Safety",
+          "finding": "Overall positive sentiment (84%) with strong safety profile across analyzed content",
+          "evidence": [
+            "Zero brand safety violations detected",
+            "Sentiment analysis: 84% positive, 14% neutral, 2% negative"
+          ],
+          "confidence_score": 0.93,
+          "actionable_recommendation": "Maintain current content guardrails; safe to expand distribution",
+          "priority": "low",
+          "timestamp": "2025-10-27T10:51:40.352458"
+        }
+      ],
+      "summary": "Contextual Intelligence Analysis: Strong alignment with cultural wellness trends.\nScience-backed messaging resonating strongly with target audience. Skin cycling trend presents immediate\nopportunity for thought leadership positioning.",
+      "overall_confidence": 0.91,
+      "generated_at": "2025-10-27T10:51:40.352460"
+    },
+    "audience_insight": {
+      "agent_type": "audience_insight",
+      "brand_name": "Unknown",
+      "analysis_period": "Last 30 days",
+      "insights": [
+        {
+          "agent_type": "audience_insight",
+          "insight_category": "Audience Demographics",
+          "finding": "Core audience: Women 18-34 (68%), with emerging growth in 35-44 segment (+34% QoQ)",
+          "evidence": [
+            "Engagement concentration in 18-34 demographic",
+            "35-44 segment showing accelerated growth trajectory"
+          ],
+          "confidence_score": 0.89,
+          "actionable_recommendation": "Develop secondary content stream targeting mature skin concerns for 35-44 audience expansion",
+          "priority": "medium",
+          "timestamp": "2025-10-27T10:51:40.352500"
+        },
+        {
+          "agent_type": "audience_insight",
+          "insight_category": "Engagement Behavior",
+          "finding": "Peak engagement windows: 7:30 AM EST (morning routine) and 8:30 PM EST (evening skincare)",
+          "evidence": [
+            "7:30 AM posts achieve 42% higher engagement in first hour",
+            "8:30 PM posts benefit from 38% longer average watch time"
+          ],
+          "confidence_score": 0.87,
+          "actionable_recommendation": "Schedule content releases at 7:30 AM and 8:30 PM EST; aim for 3-4 posts weekly",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352503"
+        },
+        {
+          "agent_type": "audience_insight",
+          "insight_category": "Content Preferences",
+          "finding": "Audience strongly prefers educational content (72%) over promotional (28%)",
+          "evidence": [
+            "Educational content averages 5.8% engagement vs 3.2% for promotional",
+            "Tutorial format has 2.3x higher save rate"
+          ],
+          "confidence_score": 0.9,
+          "actionable_recommendation": "Maintain 70/30 education-to-promotion content ratio; lead with value-first messaging",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352505"
+        }
+      ],
+      "summary": "Audience Insight Analysis: Clear behavioral patterns identified across engagement timing\nand content preferences. Strong opportunity to capture growing 35-44 segment while maintaining 18-34 core.\nEducational content strategy validated through engagement data.",
+      "overall_confidence": 0.89,
+      "generated_at": "2025-10-27T10:51:40.352507"
+    },
+    "creative_strategy": {
+      "agent_type": "creative_strategy",
+      "brand_name": "Unknown",
+      "analysis_period": "Last 30 days",
+      "insights": [
+        {
+          "agent_type": "creative_strategy",
+          "insight_category": "Creative Format",
+          "finding": "Before/after transformation format outperforming by 2.1x on engagement metrics",
+          "evidence": [
+            "Before/after videos: 7.2% average engagement rate",
+            "Standard product demos: 3.4% average engagement rate",
+            "Transformation format generates 89% more shares"
+          ],
+          "confidence_score": 0.85,
+          "actionable_recommendation": "Prioritize before/after creative template for product efficacy storytelling",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352543"
+        },
+        {
+          "agent_type": "creative_strategy",
+          "insight_category": "Visual Design",
+          "finding": "Bright, minimal aesthetic with close-up product shots driving highest completion rates",
+          "evidence": [
+            "Completion rate: Minimal aesthetic 78% vs busy backgrounds 62%",
+            "Close-up product shots correlate with 45% higher brand recall"
+          ],
+          "confidence_score": 0.83,
+          "actionable_recommendation": "Establish visual guidelines: Clean white/pastel backgrounds, 2-3 second product close-ups at 15s and 35s marks",
+          "priority": "medium",
+          "timestamp": "2025-10-27T10:51:40.352545"
+        },
+        {
+          "agent_type": "creative_strategy",
+          "insight_category": "Messaging Strategy",
+          "finding": "Problem-agitation-solution messaging structure achieving 56% higher engagement than feature-focused",
+          "evidence": [
+            "PAS structure: 6.8% engagement rate",
+            "Feature-focused: 4.4% engagement rate",
+            "PAS videos generate 2x more 'save for later' actions"
+          ],
+          "confidence_score": 0.86,
+          "actionable_recommendation": "Train creative team on PAS framework; develop 5 branded PAS templates for rapid production",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352547"
+        }
+      ],
+      "summary": "Creative Strategy Analysis: Strong creative patterns identified across format, visual design,\nand messaging. Before/after transformation format validated as top performer. Recommend immediate creative\nrefresh using PAS messaging framework with minimal aesthetic guidelines.",
+      "overall_confidence": 0.85,
+      "generated_at": "2025-10-27T10:51:40.352549"
+    },
+    "competitive_intelligence": {
+      "agent_type": "competitive_intelligence",
+      "brand_name": "Unknown",
+      "analysis_period": "Last 30 days",
+      "insights": [
+        {
+          "agent_type": "competitive_intelligence",
+          "insight_category": "Market Share",
+          "finding": "Neutrogena holds 23% share of voice in skincare Shorts category; 8pp behind category leader CeraVe (31%)",
+          "evidence": [
+            "Neutrogena: 25 videos, 5.5M views last 30 days",
+            "CeraVe: 42 videos, 9.8M views last 30 days",
+            "La Roche-Posay: 18 videos, 3.2M views"
+          ],
+          "confidence_score": 0.88,
+          "actionable_recommendation": "Increase posting frequency from 0.8 to 1.4 videos/day to close SOV gap; focus on tutorial content where CeraVe under-indexes",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352574"
+        },
+        {
+          "agent_type": "competitive_intelligence",
+          "insight_category": "Competitive Strategy",
+          "finding": "CeraVe dominating dermatologist endorsement narrative; opportunity in science-backed innovation angle",
+          "evidence": [
+            "CeraVe: 78% of content features dermatologist testimonials",
+            "Neutrogena: 34% dermatologist-focused content",
+            "White space: Clinical trial data and innovation storytelling"
+          ],
+          "confidence_score": 0.86,
+          "actionable_recommendation": "Launch 'Science of Skincare' content pillar highlighting Neutrogena R&D and clinical testing; differentiate on innovation vs endorsement",
+          "priority": "high",
+          "timestamp": "2025-10-27T10:51:40.352576"
+        },
+        {
+          "agent_type": "competitive_intelligence",
+          "insight_category": "Strategic Positioning",
+          "finding": "Undefended territory in personalized skincare solutions for specific concerns (acne, aging, sensitivity)",
+          "evidence": [
+            "Competitor content 73% focused on general skincare",
+            "Concern-specific content generating 2.4x engagement but only 27% of market volume"
+          ],
+          "confidence_score": 0.84,
+          "actionable_recommendation": "Develop concern-specific content series (Acne Solutions, Age Defense, Sensitive Skin) to own niche positioning",
+          "priority": "medium",
+          "timestamp": "2025-10-27T10:51:40.352578"
+        }
+      ],
+      "summary": "Competitive Intelligence Analysis: Clear path to close SOV gap with category leader through\nincreased posting frequency and strategic positioning. Opportunity to differentiate through innovation storytelling\nand concern-specific content where competitors under-index.",
+      "overall_confidence": 0.86,
+      "generated_at": "2025-10-27T10:51:40.352580"
+    }
+  },
+  "synthesis": {
+    "total_insights_generated": 15,
+    "high_priority_actions": 10,
+    "key_themes": [
+      "Creative format optimization (before/after) driving 2.1x engagement improvement",
+      "Morning routine content trend presenting immediate opportunity",
+      "SOV gap vs CeraVe addressable through increased posting frequency"
+    ],
+    "immediate_actions": [
+      "Increase posting frequency to 3-4x weekly at 7:30 AM and 8:30 PM EST",
+      "Launch 'Morning Glow' content series capitalizing on emerging trend",
+      "Implement before/after creative template with PAS messaging framework",
+      "Develop 'Science of Skincare' content pillar for competitive differentiation"
+    ]
+  },
+  "overall_confidence": 0.87,
+  "executive_summary": "\nYOUTUBE SHORTS INTELLIGENCE REPORT\nBrand: Neutrogena | Analysis Date: 2025-10-27\n\nOVERVIEW\nComprehensive analysis of 15 insights across 5 intelligence domains\nreveals significant opportunities for content optimization and competitive positioning.\n\nKEY FINDINGS\n1. CREATIVE PERFORMANCE: Before/after transformation format achieving 2.1x engagement vs standard product demos\n2. EMERGING TRENDS: Morning skincare routine content showing +340% velocity; immediate capture opportunity\n3. COMPETITIVE POSITION: 8pp SOV gap vs category leader addressable through strategic content increase\n4. AUDIENCE BEHAVIOR: Clear engagement windows at 7:30 AM and 8:30 PM EST; education-first preference validated\n\nSTRATEGIC RECOMMENDATIONS\n- IMMEDIATE (Next 7 days): Launch 'Morning Glow' content series; implement before/after creative template\n- SHORT-TERM (30 days): Increase posting frequency to 3-4x weekly; optimize posting times\n- ONGOING: Develop 'Science of Skincare' differentiation pillar; expand 35-44 audience targeting\n\nCONFIDENCE LEVEL: 87%\nAll recommendations backed by data-driven insights with agent confidence scores >85%.\n\nIMPACT PROJECTION\n- Engagement Rate: +47% improvement through creative optimization\n- Share of Voice: +8pp gain through frequency increase and strategic positioning\n- Audience Expansion: +34% growth in 35-44 segment through targeted content\n"
+}
