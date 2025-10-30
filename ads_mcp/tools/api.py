@@ -24,8 +24,8 @@ from fastmcp.server.dependencies import get_access_token
 from google.ads.googleads.client import GoogleAdsClient
 from google.ads.googleads.errors import GoogleAdsException
 from google.ads.googleads.util import get_nested_attr
-from google.ads.googleads.v21.services.services.customer_service import CustomerServiceClient
-from google.ads.googleads.v21.services.services.google_ads_service import GoogleAdsServiceClient
+from google.ads.googleads.v22.services.services.customer_service import CustomerServiceClient
+from google.ads.googleads.v22.services.services.google_ads_service import GoogleAdsServiceClient
 from google.oauth2.credentials import Credentials
 import proto
 import yaml
