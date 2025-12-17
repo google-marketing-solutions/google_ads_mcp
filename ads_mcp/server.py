@@ -49,7 +49,10 @@ def main():
   asyncio.run(update_views_yaml())  # Check and update docs resource
   api.get_ads_client()  # Check Google Ads credentials
   print("mcp server starting...")
-  mcp_server.run(transport="streamable-http")  # Initialize and run the server
+  mcp_server.run(
+      transport="streamable-http",
+      show_banner=False,
+  )  # Initialize and run the server
 
 
 if __name__ == "__main__":
