@@ -20,7 +20,6 @@ from ads_mcp.coordinator import mcp_server as mcp
 from ads_mcp.utils import MODULE_DIR
 
 
-
 def _get_gaql_doc_content() -> str:
   """Reads the GAQL documentation."""
   with open(

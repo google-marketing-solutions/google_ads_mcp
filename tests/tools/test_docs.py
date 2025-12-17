@@ -21,7 +21,9 @@ from ads_mcp.tools import docs
 import pytest
 
 
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="doc content")
+@mock.patch(
+    "builtins.open", new_callable=mock.mock_open, read_data="doc content"
+)
 def test_get_gaql_doc(mock_file):
   """Tests get_gaql_doc function."""
   # We access the original function via .fn() to bypass the tool decorator
@@ -31,18 +33,24 @@ def test_get_gaql_doc(mock_file):
   )
 
 
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="doc content")
+@mock.patch(
+    "builtins.open", new_callable=mock.mock_open, read_data="doc content"
+)
 def test_get_reporting_doc(mock_file):
   """Tests get_reporting_doc resource."""
   assert docs.get_reporting_view_doc.fn(None) == "doc content"
   mock_file.assert_called_with(
-      os.path.join(docs.MODULE_DIR, "context/Google_Ads_API_Reporting_Views.md"),
+      os.path.join(
+          docs.MODULE_DIR, "context/Google_Ads_API_Reporting_Views.md"
+      ),
       "r",
       encoding="utf-8",
   )
 
 
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="view content")
+@mock.patch(
+    "builtins.open", new_callable=mock.mock_open, read_data="view content"
+)
 def test_get_view_doc(mock_file):
   """Tests get_view_doc function."""
   assert docs.get_reporting_view_doc.fn("campaign") == "view content"

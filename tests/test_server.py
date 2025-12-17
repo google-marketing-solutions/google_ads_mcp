@@ -25,9 +25,7 @@ import pytest
 @mock.patch("ads_mcp.server.mcp_server")
 @mock.patch("ads_mcp.server.api")
 @mock.patch("ads_mcp.server.update_views_yaml")
-def test_main_with_oauth_env(
-    mock_update_views, mock_api, mock_mcp_server
-):
+def test_main_with_oauth_env(mock_update_views, mock_api, mock_mcp_server):
   """Tests main function with USE_GOOGLE_OAUTH_ACCESS_TOKEN set."""
   with mock.patch("ads_mcp.server.asyncio.run"):
     server.main()
@@ -43,13 +41,12 @@ def test_main_with_oauth_env(
 @mock.patch("ads_mcp.server.mcp_server")
 @mock.patch("ads_mcp.server.api")
 @mock.patch("ads_mcp.server.update_views_yaml")
-def test_main_no_env(
-    mock_update_views, mock_api, mock_mcp_server
-):
+def test_main_no_env(mock_update_views, mock_api, mock_mcp_server):
   """Tests main function with no env vars."""
   with mock.patch("ads_mcp.server.asyncio.run"):
     server.main()
-  
+
   mock_mcp_server.run.assert_called_once()
+
 
 # Additional tests for GoogleProvider branch could be added if we can fully mock it

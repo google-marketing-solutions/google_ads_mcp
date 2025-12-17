@@ -28,6 +28,7 @@ def reset_ads_client():
   yield
   api._ADS_CLIENT = None
 
+
 @pytest.mark.parametrize(
     ("query", "expected"),
     [
