@@ -20,15 +20,9 @@ from ads_mcp.coordinator import mcp_server as mcp
 from ads_mcp.utils import MODULE_DIR
 
 
-@mcp.tool()
-def get_gaql_doc() -> str:
-  """Get Google Ads Query Language (GAQL) guides."""
-  return get_gaql_doc_resource()
 
-
-@mcp.resource("resource://Google_Ads_Query_Language")
-def get_gaql_doc_resource() -> str:
-  """Get Google Ads Query Language (GAQL) guides."""
+def _get_gaql_doc_content() -> str:
+  """Reads the GAQL documentation."""
   with open(
       os.path.join(MODULE_DIR, "context/GAQL.md"), "r", encoding="utf-8"
   ) as f:
@@ -36,8 +30,45 @@ def get_gaql_doc_resource() -> str:
   return data
 
 
+def _get_reporting_doc_content() -> str:
+  """Reads the general reporting documentation."""
+  with open(
+      os.path.join(MODULE_DIR, "context/Google_Ads_API_Reporting_Views.md"),
+      "r",
+      encoding="utf-8",
+  ) as f:
+    data = f.read()
+  return data
+
+
+def _get_view_doc_content(view: str) -> str:
+  """Reads documentation for a specific view."""
+  try:
+    with open(
+        os.path.join(MODULE_DIR, f"context/views/{view}.yaml"),
+        "r",
+        encoding="utf-8",
+    ) as f:
+      data = f.read()
+  except FileNotFoundError:
+    return "No view resource with that name was found."
+  return data
+
+
 @mcp.tool()
-def get_reporting_view_doc(view: str | None) -> str:
+def get_gaql_doc() -> str:
+  """Get Google Ads Query Language (GAQL) guides."""
+  return _get_gaql_doc_content()
+
+
+@mcp.resource("resource://Google_Ads_Query_Language")
+def get_gaql_doc_resource() -> str:
+  """Get Google Ads Query Language (GAQL) guides."""
+  return _get_gaql_doc_content()
+
+
+@mcp.tool()
+def get_reporting_view_doc(view: str | None = None) -> str:
   """Get Google Ads API reporting view docs.
 
   If a Google Ads API view resource is specific, the doc will include fields
@@ -49,20 +80,14 @@ def get_reporting_view_doc(view: str | None) -> str:
       all views will be returned.
   """
   if view:
-    return get_view_doc(view)
-  return get_reporting_doc()
+    return _get_view_doc_content(view)
+  return _get_reporting_doc_content()
 
 
 @mcp.resource("resource://Google_Ads_API_Reporting_Views")
 def get_reporting_doc() -> str:
   """Get Google Ads API reporting view docs."""
-  with open(
-      os.path.join(MODULE_DIR, "context/Google_Ads_API_Reporting_Views.md"),
-      "r",
-      encoding="utf-8",
-  ) as f:
-    data = f.read()
-  return data
+  return _get_reporting_doc_content()
 
 
 @mcp.resource("resource://views/{view}")
@@ -74,13 +99,4 @@ def get_view_doc(view: str) -> str:
   Args:
       view: The name of the view resource.
   """
-  try:
-    with open(
-        os.path.join(MODULE_DIR, f"context/views/{view}.yaml"),
-        "r",
-        encoding="utf-8",
-    ) as f:
-      data = f.read()
-  except FileNotFoundError:
-    return "No view resource with that name was found."
-  return data
+  return _get_view_doc_content(view)

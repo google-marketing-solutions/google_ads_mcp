@@ -21,3 +21,7 @@ google-ads.yaml
 
 # Env files
 .env
+
+# Test files
+.coverage
+.pytest_cache
