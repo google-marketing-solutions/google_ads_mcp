@@ -17,9 +17,7 @@
 import os
 from typing import Any
 
-from ads_mcp.coordinator import mcp_server as mcp
-from ads_mcp.utils import ROOT_DIR
-
+from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_access_token
 from google.ads.googleads.client import GoogleAdsClient
 from google.ads.googleads.errors import GoogleAdsException
@@ -29,6 +27,9 @@ from google.ads.googleads.v22.services.services.google_ads_service import Google
 from google.oauth2.credentials import Credentials
 import proto
 import yaml
+
+from ads_mcp.coordinator import mcp_server as mcp
+from ads_mcp.utils import ROOT_DIR
 
 _ADS_CLIENT: GoogleAdsClient | None = None
 
@@ -146,6 +147,6 @@ def execute_gaql(
             }
         )
   except GoogleAdsException as e:
-    raise RuntimeError("\n".join(str(i) for i in e.failure.errors)) from e
+    raise ToolError("\n".join(str(i) for i in e.failure.errors)) from e
 
   return output
