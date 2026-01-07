@@ -100,7 +100,10 @@ def preprocess_gaql(query: str) -> str:
 def format_value(value: Any) -> Any:
   """Formats a value from a Google Ads API response."""
   if isinstance(value, proto.Message):
-    return_value = proto.Message.to_dict(value)
+    return_value = proto.Message.to_dict(
+        value,
+        use_integers_for_enums=False,
+    )
   elif isinstance(value, proto.Enum):
     return_value = value.name
   else:
