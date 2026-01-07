@@ -16,6 +16,7 @@
 
 import os
 from typing import Any
+import json
 
 from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_access_token
@@ -25,6 +26,7 @@ from google.ads.googleads.util import get_nested_attr
 from google.ads.googleads.v22.services.services.customer_service import CustomerServiceClient
 from google.ads.googleads.v22.services.services.google_ads_service import GoogleAdsServiceClient
 from google.oauth2.credentials import Credentials
+from google.protobuf.json_format import MessageToDict
 import proto
 import yaml
 
@@ -100,10 +102,12 @@ def preprocess_gaql(query: str) -> str:
 def format_value(value: Any) -> Any:
   """Formats a value from a Google Ads API response."""
   if isinstance(value, proto.Message):
-    return_value = proto.Message.to_dict(
+    # covert to json first to avoid serialization issues
+    return_value = proto.Message.to_json(
         value,
         use_integers_for_enums=False,
     )
+    return_value = json.loads(return_value)
   elif isinstance(value, proto.Enum):
     return_value = value.name
   else:
