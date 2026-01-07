@@ -42,9 +42,15 @@ def _get_reporting_doc_content() -> str:
 
 def _get_view_doc_content(view: str) -> str:
   """Reads documentation for a specific view."""
+  expected_dir = os.path.realpath(os.path.join(MODULE_DIR, "context", "views"))
+  target_file = os.path.join(expected_dir, f"{view}.yaml")
+  resolved_path = os.path.realpath(target_file)
+
+  if not resolved_path.startswith(expected_dir):
+    return "Invalid view name."
   try:
     with open(
-        os.path.join(MODULE_DIR, f"context/views/{view}.yaml"),
+        target_file,
         "r",
         encoding="utf-8",
     ) as f:
