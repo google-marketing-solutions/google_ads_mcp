@@ -100,7 +100,9 @@ def preprocess_gaql(query: str) -> str:
 
 def format_value(value: Any) -> Any:
   """Formats a value from a Google Ads API response."""
-  if isinstance(value, proto.Message):
+  if isinstance(value, proto.marshal.collections.repeated.Repeated):
+    return_value = [format_value(i) for i in value]
+  elif isinstance(value, proto.Message):
     # covert to json first to avoid serialization issues
     return_value = proto.Message.to_json(
         value,
@@ -115,7 +117,15 @@ def format_value(value: Any) -> Any:
   return return_value
 
 
-@mcp.tool()
+@mcp.tool(
+    output_schema={
+        "type": "object",
+        "properties": {
+            "data": {"type": "array", "items": {"type": "object"}}
+        },
+        "required": ["data"],
+    }
+)
 def execute_gaql(
     query: str,
     customer_id: str,
@@ -155,4 +165,4 @@ def execute_gaql(
   except GoogleAdsException as e:
     raise ToolError("\n".join(str(i) for i in e.failure.errors)) from e
 
-  return output
+  return {"data": output}

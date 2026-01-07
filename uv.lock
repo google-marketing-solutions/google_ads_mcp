@@ -543,7 +543,7 @@ wheels = [
 
 [[package]]
 name = "google-ads-mcp"
-version = "0.4.4"
+version = "0.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
@@ -575,7 +575,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "mcp", extras = ["cli"], specifier = ">=1.24.0" },
+    { name = "mcp", extras = ["cli"], specifier = ">=1.25.0" },
     { name = "pyink", specifier = ">=24.10.1" },
     { name = "pylint", specifier = ">=3.3.7" },
     { name = "pytest", specifier = ">=8.3.2" },
