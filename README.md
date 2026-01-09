@@ -106,6 +106,29 @@ You can then ask questions like:
 - "show me metrics for campaign `[CAMPAIGN_ID]`"
 - "get all ad groups"
 
+#### For Other MCP Clients (stdio transport)
+
+Some MCP clients require stdio transport instead of streamable-http. Set the `MCP_TRANSPORT` environment variable to `stdio`:
+
+```json
+{
+  "mcpServers": {
+    "google-ads": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/google-marketing-solutions/google_ads_mcp.git",
+        "run-mcp-server"
+      ],
+      "env": {
+        "MCP_TRANSPORT": "stdio",
+        "GOOGLE_ADS_CREDENTIALS": "PATH_TO_YAML"
+      }
+    }
+  }
+}
+```
+
 #### Direct Launch
 
 To start the server directly, in the project path, run the following command:
@@ -115,6 +138,14 @@ uv run -m ads_mcp.server
 ```
 
 The server will start and be ready to accept requests.
+
+You can specify the transport mode via the `MCP_TRANSPORT` environment variable:
+
+| Transport | Use Case | Example |
+|-----------|----------|---------|
+| `streamable-http` | HTTP-based clients (default) | `uv run -m ads_mcp.server` |
+| `stdio` | CLI-based MCP clients | `MCP_TRANSPORT=stdio uv run -m ads_mcp.server` |
+| `sse` | Server-Sent Events | `MCP_TRANSPORT=sse uv run -m ads_mcp.server` |
 
 ## Contributing
 
