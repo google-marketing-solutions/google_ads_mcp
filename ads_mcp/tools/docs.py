@@ -16,7 +16,10 @@
 
 import os
 
+import yaml
+
 from ads_mcp.coordinator import mcp_server as mcp
+from fastmcp.exceptions import ToolError
 from ads_mcp.utils import MODULE_DIR
 
 
@@ -56,13 +59,13 @@ def _get_view_doc_content(view: str) -> str:
     ) as f:
       data = f.read()
   except FileNotFoundError:
-    return "No view resource with that name was found."
+    raise ToolError(f"No view resource with the name {view} was found.")
   return data
 
 
 @mcp.tool()
 def get_gaql_doc() -> str:
-  """Get Google Ads Query Language (GAQL) guides."""
+  """Get Google Ads Query Language (GAQL) guide docs in Markdown format."""
   return _get_gaql_doc_content()
 
 
@@ -76,9 +79,10 @@ def get_gaql_doc_resource() -> str:
 def get_reporting_view_doc(view: str | None = None) -> str:
   """Get Google Ads API reporting view docs.
 
-  If a Google Ads API view resource is specific, the doc will include fields
-  metadata for each the view.
+  If a Google Ads API view resource is specific, the doc will include
+  metadata and related fields for the view.
   If a view is not specified, a doc briefs all views will be returned.
+  All docs are in YAML format.
 
   Args:
       view: (Optional) The name of the view resource. If not set, a doc briefs
@@ -105,3 +109,34 @@ def get_view_doc(view: str) -> str:
       view: The name of the view resource.
   """
   return _get_view_doc_content(view)
+
+
+__CACHED_FIELDS: dict = {}
+
+
+@mcp.tool()
+def get_reporting_fields_doc(fields: list[str]) -> str:
+  """Get Google Ads API reporting query fields detailed docs.
+
+  For each a Google Ads API view fields is specific, the detailed docs of the fields
+  metadata will be return. Includes
+  All docs are in YAML format.
+
+  Args:
+      fields: A list of field names.
+  """
+  global __CACHED_FIELDS
+  if not len(__CACHED_FIELDS):
+    with open(
+        os.path.join(MODULE_DIR, "context/fields.yaml"),
+        "r",
+        encoding="utf-8",
+    ) as f:
+      __CACHED_FIELDS = yaml.safe_load(f)
+
+  fields_info = {field: __CACHED_FIELDS.get(field) for field in fields}
+  missing_fields = [field for field in fields if not fields_info[field]]
+  if missing_fields:
+    raise ToolError("Unknown fields: " + ", ".join(missing_fields))
+
+  return yaml.dump(fields_info)

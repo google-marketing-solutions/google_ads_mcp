@@ -32,6 +32,7 @@ import yaml
 from ads_mcp.coordinator import mcp_server as mcp
 from ads_mcp.utils import ROOT_DIR
 
+
 _ADS_CLIENT: GoogleAdsClient | None = None
 
 
@@ -121,7 +122,7 @@ def format_value(value: Any) -> Any:
     output_schema={
         "type": "object",
         "properties": {
-            "data": {"type": "array", "items": {"type": "object"}}
+            "data": {"type": "array", "items": {"type": "object"}},
         },
         "required": ["data"],
     }

@@ -54,9 +54,9 @@ def get_fields_obj(
 ) -> dict[str, Any]:
   """Extracts field metadata details for a given category from the view JSON."""
   selected_info = [
-      "name",
+      # "name",
       "description",
-      "category",
+      # "category",
       "data_type",
       "is_repeated",
       "enum_values",
@@ -64,13 +64,18 @@ def get_fields_obj(
       "sortable",
   ]
 
-  def detailed(field):
-    return view_json["fields"][field]["field_details"]
+  def details(field):
+    raw_data = view_json["fields"][field]["field_details"]
+    info = {i: raw_data[i] for i in selected_info}
+    if raw_data.get("data_type") == "ENUM":
+      info["enum_values"] = ", ".join(raw_data["enum_values"])
+    else:
+      del info["enum_values"]
 
-  return {
-      field: {i: detailed(field)[i] for i in selected_info}
-      for field in view_json[category]
-  }
+    {i: raw_data[i] for i in selected_info}
+    return info
+
+  return {field: details(field) for field in view_json[category]}
 
 
 async def save_view_yaml(view: str, path: str = "."):
@@ -93,8 +98,20 @@ async def save_view_yaml(view: str, path: str = "."):
       "metrics": get_fields_obj(view_json, "metrics"),
   }
 
+  view_output = {
+      "display_name": view_json["display_name"],
+      "name": view_json["name"],
+      "description": view_json["description"],
+      "attributed_views": list(attributed_views),
+      "attributes": list(view_data["attributes"].keys()),
+      "segments": list(view_data["segments"].keys()),
+      "metrics": list(view_data["metrics"].keys()),
+  }
+
   with open(os.path.join(path, f"{view}.yaml"), "w", encoding="utf-8") as f:
-    yaml.safe_dump(view_data, f, sort_keys=False)
+    yaml.safe_dump(view_output, f, sort_keys=False)
+
+  return view_data
 
 
 async def update_views_yaml():
@@ -108,7 +125,15 @@ async def update_views_yaml():
     views = yaml.safe_load(f)
 
   tasks = [save_view_yaml(view, f"{CONTEXT_PATH}/views") for view in views]
-  await asyncio.gather(*tasks)
+  views_data = await asyncio.gather(*tasks)
+  all_fields = {}
+  for view in views_data:
+    all_fields.update(view["attributes"])
+    all_fields.update(view["segments"])
+    all_fields.update(view["metrics"])
+
+  with open(f"{CONTEXT_PATH}/fields.yaml", "w", encoding="utf-8") as f:
+    views = yaml.safe_dump(all_fields, f, sort_keys=True)
 
   with open(f"{CONTEXT_PATH}/.api-version", "w", encoding="utf-8") as f:
     f.write(ADS_API_VERSION)
