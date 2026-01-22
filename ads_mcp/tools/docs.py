@@ -15,12 +15,13 @@
 """This module provides tools for accessing Google Ads API documentation."""
 
 import os
+from typing import Any
 
 import yaml
 
 from ads_mcp.coordinator import mcp_server as mcp
-from fastmcp.exceptions import ToolError
 from ads_mcp.utils import MODULE_DIR
+from fastmcp.exceptions import ToolError
 
 
 def _get_gaql_doc_content() -> str:
@@ -58,8 +59,10 @@ def _get_view_doc_content(view: str) -> str:
         encoding="utf-8",
     ) as f:
       data = f.read()
-  except FileNotFoundError:
-    raise ToolError(f"No view resource with the name {view} was found.")
+  except FileNotFoundError as exc:
+    raise ToolError(
+        f"No view resource with the name {view} was found."
+    ) from exc
   return data
 
 
@@ -111,30 +114,30 @@ def get_view_doc(view: str) -> str:
   return _get_view_doc_content(view)
 
 
-__CACHED_FIELDS: dict = {}
+_CACHED_FIELDS: dict[str, Any] = {}
 
 
 @mcp.tool()
 def get_reporting_fields_doc(fields: list[str]) -> str:
   """Get Google Ads API reporting query fields detailed docs.
 
-  For each a Google Ads API view fields is specific, the detailed docs of the fields
-  metadata will be return. Includes
+  For each a Google Ads API view fields is specific, the detailed
+  docs of the fields metadata will be return. Includes
   All docs are in YAML format.
 
   Args:
       fields: A list of field names.
   """
-  global __CACHED_FIELDS
-  if not len(__CACHED_FIELDS):
+  global _CACHED_FIELDS
+  if not _CACHED_FIELDS:
     with open(
         os.path.join(MODULE_DIR, "context/fields.yaml"),
         "r",
         encoding="utf-8",
     ) as f:
-      __CACHED_FIELDS = yaml.safe_load(f)
+      _CACHED_FIELDS = yaml.safe_load(f)
 
-  fields_info = {field: __CACHED_FIELDS.get(field) for field in fields}
+  fields_info = {field: _CACHED_FIELDS.get(field) for field in fields}
   missing_fields = [field for field in fields if not fields_info[field]]
   if missing_fields:
     raise ToolError("Unknown fields: " + ", ".join(missing_fields))
