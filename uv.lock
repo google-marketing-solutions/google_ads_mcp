@@ -524,7 +524,7 @@ wheels = [
 
 [[package]]
 name = "google-ads"
-version = "28.4.1"
+version = "29.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-api-core" },
@@ -536,14 +536,14 @@ dependencies = [
     { name = "protobuf" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d5/0d/4ea8b08bc66c2015e7b28268460477ff6cbb22baaad0ebe395da4e3551d8/google_ads-28.4.1.tar.gz", hash = "sha256:ecb9d651ac7728bfbf56c7dd20130cc1d093abce69df336d6b844d2ca8a1def3", size = 9227417, upload-time = "2025-12-04T18:27:28.892Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2c/d5/bdc19aa181af685fa17b904d69440ad8821ace603aae704004882db984dc/google_ads-29.0.0.tar.gz", hash = "sha256:f0ac0ac1cbe52c3387dd13fd337cf72667751d4474240b85b1eb0dd1ebc9f9e8", size = 9427948, upload-time = "2026-01-28T22:27:37.164Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f1/ab/0701d96399c395a6c95edda8b16b288ba9fb79484102ace33849d66edfc7/google_ads-28.4.1-py3-none-any.whl", hash = "sha256:841e9a458bc4b3be9dc4ac3e8268cd781a8dc120607853b0ddddc6488cc3b142", size = 17790707, upload-time = "2025-12-04T18:27:26.668Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/de/5e3b5f3260bde4e54e7d8360ba2e9ee0faa3b326c8d3bfc9343a269bfb12/google_ads-29.0.0-py3-none-any.whl", hash = "sha256:133652c0bafc92591b06a991bc3500b188cdaeb046be2b3193c9ca1cb30f86df", size = 18109098, upload-time = "2026-01-28T22:27:34.306Z" },
 ]
 
 [[package]]
 name = "google-ads-mcp"
-version = "0.6.0"
+version = "0.6.1"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
@@ -567,7 +567,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastmcp", specifier = ">=2.14.3" },
-    { name = "google-ads", specifier = "==28.4.1" },
+    { name = "google-ads", specifier = "==29.0.0" },
     { name = "httpx", extras = ["http2"], specifier = ">=0.28.1" },
     { name = "mcp", specifier = ">=1.25.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },

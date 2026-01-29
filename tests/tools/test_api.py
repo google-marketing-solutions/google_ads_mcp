@@ -67,7 +67,7 @@ def test_format_value(mocker):
   """Tests the format_value function."""
   # Test with a proto.Message
   mock_message = mock.Mock(spec=proto.Message)
-  mocker.patch.object(proto.Message, "to_dict", return_value={"key": "value"})
+  mocker.patch.object(proto.Message, "to_json", return_value='{"key": "value"}')
   assert api.format_value(mock_message) == {"key": "value"}
 
   # Test with a proto.Enum
@@ -103,6 +103,6 @@ def test_execute_gaql(mock_google_ads_client):
       )
   ]
   with mock.patch("ads_mcp.tools.api.get_nested_attr", return_value="123"):
-    assert api.execute_gaql.fn("SELECT campaign.id FROM campaign", "123") == [
-        {"campaign.id": "123"}
-    ]
+    assert api.execute_gaql.fn("SELECT campaign.id FROM campaign", "123") == {
+        "data": [{"campaign.id": "123"}]
+    }

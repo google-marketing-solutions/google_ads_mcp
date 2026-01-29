@@ -18,13 +18,12 @@ import os
 from unittest import mock
 
 from ads_mcp import server
-import pytest
 
 
 @mock.patch.dict(os.environ, {"USE_GOOGLE_OAUTH_ACCESS_TOKEN": "true"})
 @mock.patch("ads_mcp.server.mcp_server")
 @mock.patch("ads_mcp.server.api")
-@mock.patch("ads_mcp.server.update_views_yaml")
+@mock.patch("ads_mcp.server.update_views_yaml", new_callable=mock.Mock)
 def test_main_with_oauth_env(mock_update_views, mock_api, mock_mcp_server):
   """Tests main function with USE_GOOGLE_OAUTH_ACCESS_TOKEN set."""
   with mock.patch("ads_mcp.server.asyncio.run"):
@@ -32,7 +31,9 @@ def test_main_with_oauth_env(mock_update_views, mock_api, mock_mcp_server):
 
   mock_update_views.assert_called_once()
   mock_api.get_ads_client.assert_called_once()
-  mock_mcp_server.run.assert_called_once_with(transport="streamable-http")
+  mock_mcp_server.run.assert_called_once_with(
+      transport="streamable-http", show_banner=False
+  )
   # Verify auth set (hard to verify exact type without exposing it better,
   # but we can check if it was accessed/set if we mock it differently,
   # or just rely on coverage hitting the line)
@@ -40,7 +41,7 @@ def test_main_with_oauth_env(mock_update_views, mock_api, mock_mcp_server):
 
 @mock.patch("ads_mcp.server.mcp_server")
 @mock.patch("ads_mcp.server.api")
-@mock.patch("ads_mcp.server.update_views_yaml")
+@mock.patch("ads_mcp.server.update_views_yaml", new_callable=mock.Mock)
 def test_main_no_env(mock_update_views, mock_api, mock_mcp_server):
   """Tests main function with no env vars."""
   with mock.patch("ads_mcp.server.asyncio.run"):

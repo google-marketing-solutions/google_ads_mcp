@@ -23,7 +23,8 @@ import yaml
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-ADS_API_VERSION = "v22"
+ADS_API_VERSION = "v23"
+MCP_SERVER_VERSION = "v0.6.1"
 VIEW_JSON_URL_PATH = (
     f"https://gaql-query-builder.uc.r.appspot.com/schemas/{ADS_API_VERSION}/"
 )
@@ -114,12 +115,35 @@ async def save_view_yaml(view: str, path: str = "."):
   return view_data
 
 
-async def update_views_yaml():
-  """Updates the YAML files for all reporting views."""
+def check_context_version() -> bool:
+  """Checks if the current API and MCP server versions match context files.
+
+  Returns:
+      bool: True if context files exist and versions match, False otherwise.
+  """
   if os.path.isfile(f"{CONTEXT_PATH}/.api-version"):
     with open(f"{CONTEXT_PATH}/.api-version", "r", encoding="utf-8") as f:
-      if f.read().strip() == ADS_API_VERSION:
-        return
+      if f.read().strip() != ADS_API_VERSION:
+        return False
+  else:
+    return False
+
+  if os.path.isfile(f"{CONTEXT_PATH}/.mcp-server-version"):
+    with open(
+        f"{CONTEXT_PATH}/.mcp-server-version", "r", encoding="utf-8"
+    ) as f:
+      if f.read().strip() != MCP_SERVER_VERSION:
+        return False
+  else:
+    return False
+
+  return True
+
+
+async def update_views_yaml():
+  """Updates the YAML files for all reporting views."""
+  if check_context_version():
+    return
 
   with open(f"{CONTEXT_PATH}/views.yaml", "r", encoding="utf-8") as f:
     views = yaml.safe_load(f)
@@ -137,6 +161,8 @@ async def update_views_yaml():
 
   with open(f"{CONTEXT_PATH}/.api-version", "w", encoding="utf-8") as f:
     f.write(ADS_API_VERSION)
+  with open(f"{CONTEXT_PATH}/.mcp-server-version", "w", encoding="utf-8") as f:
+    f.write(MCP_SERVER_VERSION)
 
 
 if __name__ == "__main__":

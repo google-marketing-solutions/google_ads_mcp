@@ -27,7 +27,7 @@ def test_get_view_json_url():
   """Tests the get_view_json_url function."""
   assert (
       get_view_json_url("campaign")
-      == "https://gaql-query-builder.uc.r.appspot.com/schemas/v22/campaign.json"
+      == "https://gaql-query-builder.uc.r.appspot.com/schemas/v23/campaign.json"
   )
 
 
@@ -64,12 +64,9 @@ def test_get_fields_obj():
   }
   expected = {
       "campaign.id": {
-          "name": "campaign.id",
           "description": "The ID of the campaign.",
-          "category": "ATTRIBUTE",
           "data_type": "INT64",
           "is_repeated": False,
-          "enum_values": [],
           "filterable": True,
           "sortable": True,
       }
@@ -126,7 +123,8 @@ async def test_update_views_yaml(
     mock_save_view_yaml, mock_safe_load, mock_open, mock_isfile
 ):
   """Tests the update_views_yaml function."""
-  mock_isfile.return_value = False
+  mock_isfile.return_value = True
+  mock_open.return_value.read.return_value = "old_version"
   mock_safe_load.return_value = ["campaign", "ad_group"]
   await update_views_yaml()
   assert mock_save_view_yaml.call_count == 2

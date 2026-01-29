@@ -18,6 +18,7 @@ import os
 from unittest import mock
 
 from ads_mcp.tools import docs
+from fastmcp.exceptions import ToolError
 import pytest
 
 
@@ -64,10 +65,8 @@ def test_get_view_doc(mock_file):
 @mock.patch("builtins.open", side_effect=FileNotFoundError)
 def test_get_view_doc_not_found(mock_file):
   """Tests get_view_doc function when file not found."""
-  assert (
-      docs.get_reporting_view_doc.fn("non_existent")
-      == "No view resource with that name was found."
-  )
+  with pytest.raises(ToolError):
+    docs.get_reporting_view_doc.fn("non_existent")
 
 
 def test_resources_exist():
