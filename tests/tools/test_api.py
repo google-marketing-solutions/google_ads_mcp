@@ -24,9 +24,9 @@ import pytest
 @pytest.fixture(autouse=True)
 def reset_ads_client():
   """Resets the cached GoogleAdsClient instance before each test."""
-  api._ADS_CLIENT = None
+  api._ADS_CLIENT = None  # pylint: disable=protected-access
   yield
-  api._ADS_CLIENT = None
+  api._ADS_CLIENT = None  # pylint: disable=protected-access
 
 
 @pytest.mark.parametrize(
@@ -67,7 +67,9 @@ def test_format_value(mocker):
   """Tests the format_value function."""
   # Test with a proto.Message
   mock_message = mock.Mock(spec=proto.Message)
-  mocker.patch.object(proto.Message, "to_json", return_value='{"key": "value"}')
+  mocker.patch.object(
+      proto.Message, "to_json", return_value='{"key": "value"}'
+  )
   assert api.format_value(mock_message) == {"key": "value"}
 
   # Test with a proto.Enum
@@ -89,7 +91,7 @@ def test_list_accessible_accounts(mock_google_ads_client):
       "customers/123",
       "customers/456",
   ]
-  assert api.list_accessible_accounts.fn() == ["123", "456"]
+  assert api.list_accessible_accounts() == ["123", "456"]
 
 
 @mock.patch("ads_mcp.tools.api.GoogleAdsClient")
@@ -103,6 +105,6 @@ def test_execute_gaql(mock_google_ads_client):
       )
   ]
   with mock.patch("ads_mcp.tools.api.get_nested_attr", return_value="123"):
-    assert api.execute_gaql.fn("SELECT campaign.id FROM campaign", "123") == {
+    assert api.execute_gaql("SELECT campaign.id FROM campaign", "123") == {
         "data": [{"campaign.id": "123"}]
     }

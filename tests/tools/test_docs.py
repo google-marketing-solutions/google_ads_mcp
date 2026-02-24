@@ -27,8 +27,7 @@ import pytest
 )
 def test_get_gaql_doc(mock_file):
   """Tests get_gaql_doc function."""
-  # We access the original function via .fn() to bypass the tool decorator
-  assert docs.get_gaql_doc.fn() == "doc content"
+  assert docs.get_gaql_doc() == "doc content"
   mock_file.assert_called_with(
       os.path.join(docs.MODULE_DIR, "context/GAQL.md"), "r", encoding="utf-8"
   )
@@ -39,7 +38,7 @@ def test_get_gaql_doc(mock_file):
 )
 def test_get_reporting_doc(mock_file):
   """Tests get_reporting_doc resource."""
-  assert docs.get_reporting_view_doc.fn(None) == "doc content"
+  assert docs.get_reporting_view_doc(None) == "doc content"
   mock_file.assert_called_with(
       os.path.join(
           docs.MODULE_DIR, "context/Google_Ads_API_Reporting_Views.md"
@@ -54,7 +53,7 @@ def test_get_reporting_doc(mock_file):
 )
 def test_get_view_doc(mock_file):
   """Tests get_view_doc function."""
-  assert docs.get_reporting_view_doc.fn("campaign") == "view content"
+  assert docs.get_reporting_view_doc("campaign") == "view content"
   mock_file.assert_called_with(
       os.path.join(docs.MODULE_DIR, "context/views/campaign.yaml"),
       "r",
@@ -63,14 +62,15 @@ def test_get_view_doc(mock_file):
 
 
 @mock.patch("builtins.open", side_effect=FileNotFoundError)
-def test_get_view_doc_not_found(mock_file):
+def test_get_view_doc_not_found(_):
   """Tests get_view_doc function when file not found."""
   with pytest.raises(ToolError):
-    docs.get_reporting_view_doc.fn("non_existent")
+    docs.get_reporting_view_doc("non_existent")
 
 
 def test_resources_exist():
   """Tests that the resources are correctly defined."""
-  # We can't easily test the @mcp.resource decorator registration without mocking FastMCP
+  # We can't easily test the @mcp.resource decorator registration without
+  # mocking FastMCP
   # but checking the tool definitions is done via coverage
   pass
