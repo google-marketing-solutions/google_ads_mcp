@@ -19,13 +19,14 @@ from ads_mcp.coordinator import mcp_server
 from ads_mcp.scripts.generate_views import update_views_yaml
 from ads_mcp.tools import api
 from ads_mcp.tools import docs
+from ads_mcp.tools import mutations
 
 import dotenv
 
 dotenv.load_dotenv()
 
 
-tools = [api, docs]
+tools = [api, docs, mutations]
 
 
 def main():
