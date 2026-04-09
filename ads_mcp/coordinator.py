@@ -20,4 +20,5 @@ from fastmcp import FastMCP
 mcp_server = FastMCP(
     name="Google Ads API",
     mask_error_details=True,
+    client_log_level="error",
 )

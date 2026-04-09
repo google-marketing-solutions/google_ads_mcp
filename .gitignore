@@ -18,6 +18,7 @@ google-ads.yaml
 
 # temp file
 .api-version
+.mcp-server-version
 
 # Env files
 .env
