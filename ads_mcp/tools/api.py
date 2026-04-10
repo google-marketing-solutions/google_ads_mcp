@@ -67,11 +67,16 @@ def get_ads_client() -> GoogleAdsClient:
     with open(credentials_path, "r", encoding="utf-8") as f:
       ads_config = yaml.safe_load(f.read())
     return GoogleAdsClient(
-        credentials, developer_token=ads_config.get("developer_token")
+        credentials,
+        developer_token=ads_config.get("developer_token"),
+        use_proto_plus=True,
     )
 
   if not _ADS_CLIENT:
     _ADS_CLIENT = GoogleAdsClient.load_from_storage(credentials_path)
+    _ADS_CLIENT.use_proto_plus = (
+        True  # Forced enable proto plus to avoid attribute issues.
+    )
 
   return _ADS_CLIENT
 
