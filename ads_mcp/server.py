@@ -48,11 +48,8 @@ def main():
   """Initializes and runs the MCP server."""
   asyncio.run(update_views_yaml())  # Check and update docs resource
   api.get_ads_client()  # Check Google Ads credentials
-  print("mcp server starting...")
-  mcp_server.run(
-      transport="streamable-http",
-      show_banner=False,
-  )  # Initialize and run the server
+  transport = os.getenv("MCP_TRANSPORT", "streamable-http")
+  mcp_server.run(transport=transport, show_banner=False)
 
 
 if __name__ == "__main__":
