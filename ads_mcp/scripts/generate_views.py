@@ -23,8 +23,8 @@ import yaml
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-ADS_API_VERSION = "v23"
-MCP_SERVER_VERSION = "v0.6.3"
+ADS_API_VERSION = "v24"
+MCP_SERVER_VERSION = "v0.6.4"
 VIEW_JSON_URL_PATH = (
     f"https://gaql-query-builder.uc.r.appspot.com/schemas/{ADS_API_VERSION}/"
 )

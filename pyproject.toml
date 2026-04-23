@@ -1,6 +1,6 @@
 [project]
 name = "google-ads-mcp"
-version = "0.6.3"
+version = "0.6.4"
 description = "An implementation of MCP server for the Google Ads API."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -24,7 +24,7 @@ classifiers = [
 
 dependencies = [
     "fastmcp>=3.2.2",
-    "google-ads==30.0.0",
+    "google-ads==30.1.0",
     "httpx[http2]>=0.28.1",
     "mcp>=1.27.0",
     "pyyaml>=6.0.3",
