@@ -48,6 +48,7 @@ dev = [
 
 [project.scripts]
 run-mcp-server = "ads_mcp.server:main"
+run-mcp-server-stdio = "ads_mcp.stdio:main"
 
 [tool.pyink]
 # Formatting configuration to follow Google style-guide
