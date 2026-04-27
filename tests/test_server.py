@@ -44,10 +44,11 @@ def test_main_with_oauth_env(mock_update_views, mock_api, mock_mcp_server):
 @mock.patch("ads_mcp.server.update_views_yaml", new_callable=mock.Mock)
 def test_main_no_env(mock_update_views, mock_api, mock_mcp_server):
   """Tests main function with no env vars."""
+  # pylint: disable=unused-argument
   with mock.patch("ads_mcp.server.asyncio.run"):
     server.main()
 
   mock_mcp_server.run.assert_called_once()
 
 
-# Additional tests for GoogleProvider branch could be added if we can fully mock it
+# Additional tests for GoogleProvider branch could be added if we can mock it.

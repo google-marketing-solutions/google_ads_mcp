@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """The server for the Google Ads API MCP."""
+
 import asyncio
 
 from ads_mcp.coordinator import mcp_server

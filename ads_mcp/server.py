@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """The server for the Google Ads API MCP."""
+
 import asyncio
 import os
 
@@ -40,6 +41,7 @@ if os.getenv("FASTMCP_SERVER_AUTH_GOOGLE_CLIENT_ID") and os.getenv(
 ):
   base_url = os.getenv("FASTMCP_SERVER_BASE_URL", "http://localhost:8000")
   mcp_server.auth = GoogleProvider(
+      client_id=os.getenv("FASTMCP_SERVER_AUTH_GOOGLE_CLIENT_ID"),
       base_url=base_url,
       required_scopes=["https://www.googleapis.com/auth/adwords"],
   )

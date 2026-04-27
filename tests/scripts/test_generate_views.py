@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Tests for the view generation script."""
+
 from unittest import mock
 
 from ads_mcp.scripts.generate_views import get_fields_obj

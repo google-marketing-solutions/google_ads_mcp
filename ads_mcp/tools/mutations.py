@@ -12,94 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Campaign creation and mutation tools for Google Ads API."""
+"""Resources creation and mutation tools for Google Ads API."""
 
 from fastmcp.exceptions import ToolError
 from google.ads.googleads.errors import GoogleAdsException
-from google.ads.googleads.v24.common.types.ad_asset import AdTextAsset
-from google.ads.googleads.v24.common.types.ad_type_infos import (
-    ResponsiveSearchAdInfo,
-)
-from google.ads.googleads.v24.common.types.bidding import TargetSpend
-from google.ads.googleads.v24.common.types.criteria import (
-    KeywordInfo,
-    LocationInfo,
-)
-from google.ads.googleads.v24.enums.types.ad_group_ad_status import (
-    AdGroupAdStatusEnum,
-)
-from google.ads.googleads.v24.enums.types.ad_group_criterion_status import (
-    AdGroupCriterionStatusEnum,
-)
-from google.ads.googleads.v24.enums.types.ad_group_status import (
-    AdGroupStatusEnum,
-)
-from google.ads.googleads.v24.enums.types.ad_group_type import (
-    AdGroupTypeEnum,
-)
-from google.ads.googleads.v24.enums.types.advertising_channel_type import (
-    AdvertisingChannelTypeEnum,
-)
-from google.ads.googleads.v24.enums.types.budget_delivery_method import (
-    BudgetDeliveryMethodEnum,
-)
-from google.ads.googleads.v24.enums.types.campaign_status import (
-    CampaignStatusEnum,
-)
-from google.ads.googleads.v24.enums.types.eu_political_advertising_status import (
-    EuPoliticalAdvertisingStatusEnum,
-)
-from google.ads.googleads.v24.enums.types.keyword_match_type import (
-    KeywordMatchTypeEnum,
-)
-from google.ads.googleads.v24.enums.types.negative_geo_target_type import (
-    NegativeGeoTargetTypeEnum,
-)
-from google.ads.googleads.v24.enums.types.positive_geo_target_type import (
-    PositiveGeoTargetTypeEnum,
-)
-from google.ads.googleads.v24.resources.types.ad import Ad
-from google.ads.googleads.v24.resources.types.ad_group import AdGroup
-from google.ads.googleads.v24.resources.types.ad_group_ad import AdGroupAd
-from google.ads.googleads.v24.resources.types.ad_group_criterion import (
-    AdGroupCriterion,
-)
-from google.ads.googleads.v24.resources.types.campaign import Campaign
-from google.ads.googleads.v24.resources.types.campaign_budget import (
-    CampaignBudget,
-)
-from google.ads.googleads.v24.resources.types.campaign_criterion import (
-    CampaignCriterion,
-)
-from google.ads.googleads.v24.services.types.ad_group_ad_service import (
-    AdGroupAdOperation,
-)
-from google.ads.googleads.v24.services.types.ad_group_criterion_service import (
-    AdGroupCriterionOperation,
-)
-from google.ads.googleads.v24.services.types.ad_group_service import (
-    AdGroupOperation,
-)
-from google.ads.googleads.v24.services.types.campaign_budget_service import (
-    CampaignBudgetOperation,
-)
-from google.ads.googleads.v24.services.types.campaign_criterion_service import (
-    CampaignCriterionOperation,
-)
-from google.ads.googleads.v24.services.types.campaign_service import (
-    CampaignOperation,
-)
 from google.protobuf import field_mask_pb2
 
 from ads_mcp.coordinator import mcp_server as mcp
+from ads_mcp.tools._ads_api import common_types
+from ads_mcp.tools._ads_api import resource_types
+from ads_mcp.tools._ads_api import enum_types
+from ads_mcp.tools._ads_api import service_types
 from ads_mcp.tools.api import get_ads_client
 
 
 def _handle_google_ads_error(e: GoogleAdsException) -> None:
   """Raises a ToolError from a GoogleAdsException."""
-  raise ToolError(
-      "\n".join(str(err) for err in e.failure.errors)
-  ) from e
+  raise ToolError("\n".join(str(err) for err in e.failure.errors)) from e
 
 
 def _get_client(login_customer_id: str | None = None):
@@ -120,12 +49,11 @@ def _resolve_enum(enum_type, value: str, param_name: str):
     return enum_type[value.upper()]
   except (KeyError, AttributeError) as e:
     valid = [
-        n for n in enum_type.__members__
-        if n not in ("UNSPECIFIED", "UNKNOWN")
+        n for n in enum_type.__members__ if n not in ("UNSPECIFIED", "UNKNOWN")
     ]
+    valid_str = ", ".join(valid)
     raise ToolError(
-        f"Invalid {param_name}: {value!r}. "
-        f"Valid values: {', '.join(valid)}."
+        f"Invalid {param_name}: {value!r}. Valid values: {valid_str}."
     ) from e
 
 
@@ -152,17 +80,17 @@ def create_campaign_budget(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("CampaignBudgetService")
 
-  budget = CampaignBudget(
+  budget = resource_types.CampaignBudget(
       name=name,
       amount_micros=amount_micros,
       delivery_method=_resolve_enum(
-          BudgetDeliveryMethodEnum.BudgetDeliveryMethod,
+          enum_types.BudgetDeliveryMethodEnum.BudgetDeliveryMethod,
           delivery_method,
           "delivery_method",
       ),
   )
 
-  operation = CampaignBudgetOperation(create=budget)
+  operation = service_types.CampaignBudgetOperation(create=budget)
   try:
     response = service.mutate_campaign_budgets(
         customer_id=customer_id, operations=[operation]
@@ -185,7 +113,7 @@ def create_search_campaign(
     target_content_network: bool = False,
     login_customer_id: str | None = None,
 ) -> dict[str, str]:
-  """Creates a Search campaign with TargetSpend bidding.
+  """Creates a Search campaign with common_types.TargetSpend bidding.
 
   Args:
       customer_id: Google Ads customer ID (digits only).
@@ -203,33 +131,28 @@ def create_search_campaign(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("CampaignService")
 
-  eu_status = (
-      EuPoliticalAdvertisingStatusEnum
-      .EuPoliticalAdvertisingStatus
-      .DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING
+  eu_political_enum = (
+      enum_types.EuPoliticalAdvertisingStatusEnum.EuPoliticalAdvertisingStatus
   )
-  campaign = Campaign(
+  eu_status = eu_political_enum.DOES_NOT_CONTAIN_EU_POLITICAL_ADVERTISING
+  campaign = resource_types.Campaign(
       name=name,
       campaign_budget=budget_resource_name,
       status=_resolve_enum(
-          CampaignStatusEnum.CampaignStatus, status, "status"
+          enum_types.CampaignStatusEnum.CampaignStatus, status, "status"
       ),
       advertising_channel_type=(
-          AdvertisingChannelTypeEnum.AdvertisingChannelType.SEARCH
+          enum_types.AdvertisingChannelTypeEnum.AdvertisingChannelType.SEARCH
       ),
-      target_spend=TargetSpend(),
+      target_spend=common_types.TargetSpend(),
       contains_eu_political_advertising=eu_status,
   )
   campaign.network_settings.target_google_search = target_google_search
-  campaign.network_settings.target_search_network = (
-      target_search_network
-  )
-  campaign.network_settings.target_content_network = (
-      target_content_network
-  )
+  campaign.network_settings.target_search_network = target_search_network
+  campaign.network_settings.target_content_network = target_content_network
   campaign.network_settings.target_partner_search_network = False
 
-  operation = CampaignOperation(create=campaign)
+  operation = service_types.CampaignOperation(create=campaign)
   try:
     response = service.mutate_campaigns(
         customer_id=customer_id, operations=[operation]
@@ -266,17 +189,17 @@ def create_ad_group(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("AdGroupService")
 
-  ad_group = AdGroup(
+  ad_group = resource_types.AdGroup(
       name=name,
       campaign=campaign_resource_name,
       status=_resolve_enum(
-          AdGroupStatusEnum.AdGroupStatus, status, "status"
+          enum_types.AdGroupStatusEnum.AdGroupStatus, status, "status"
       ),
-      type_=AdGroupTypeEnum.AdGroupType.SEARCH_STANDARD,
+      type_=enum_types.AdGroupTypeEnum.AdGroupType.SEARCH_STANDARD,
       cpc_bid_micros=cpc_bid_micros,
   )
 
-  operation = AdGroupOperation(create=ad_group)
+  operation = service_types.AdGroupOperation(create=ad_group)
   try:
     response = service.mutate_ad_groups(
         customer_id=customer_id, operations=[operation]
@@ -319,10 +242,10 @@ def create_responsive_search_ad(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("AdGroupAdService")
 
-  headline_assets = [AdTextAsset(text=h) for h in headlines]
-  description_assets = [AdTextAsset(text=d) for d in descriptions]
+  headline_assets = [common_types.AdTextAsset(text=h) for h in headlines]
+  description_assets = [common_types.AdTextAsset(text=d) for d in descriptions]
 
-  rsa_info = ResponsiveSearchAdInfo(
+  rsa_info = common_types.ResponsiveSearchAdInfo(
       headlines=headline_assets,
       descriptions=description_assets,
   )
@@ -331,20 +254,20 @@ def create_responsive_search_ad(
   if path2:
     rsa_info.path2 = path2
 
-  ad = Ad(
+  ad = resource_types.Ad(
       final_urls=[final_url],
       responsive_search_ad=rsa_info,
   )
 
-  ad_group_ad = AdGroupAd(
+  ad_group_ad = resource_types.AdGroupAd(
       ad_group=ad_group_resource_name,
       status=_resolve_enum(
-          AdGroupAdStatusEnum.AdGroupAdStatus, status, "status"
+          enum_types.AdGroupAdStatusEnum.AdGroupAdStatus, status, "status"
       ),
       ad=ad,
   )
 
-  operation = AdGroupAdOperation(create=ad_group_ad)
+  operation = service_types.AdGroupAdOperation(create=ad_group_ad)
   try:
     response = service.mutate_ad_group_ads(
         customer_id=customer_id, operations=[operation]
@@ -354,13 +277,6 @@ def create_responsive_search_ad(
 
   resource_name = response.results[0].resource_name
   return {"resource_name": resource_name}
-
-
-_MATCH_TYPE_MAP = {
-    "EXACT": KeywordMatchTypeEnum.KeywordMatchType.EXACT,
-    "PHRASE": KeywordMatchTypeEnum.KeywordMatchType.PHRASE,
-    "BROAD": KeywordMatchTypeEnum.KeywordMatchType.BROAD,
-}
 
 
 @mcp.tool()
@@ -388,21 +304,24 @@ def create_keywords(
 
   operations = []
   for kw in keywords:
-    match_type = _MATCH_TYPE_MAP.get(kw["match_type"].upper())
-    if not match_type:
-      raise ToolError(
-          f"Invalid match_type: {kw['match_type']}. "
-          "Use EXACT, PHRASE, or BROAD."
-      )
+    match_type = _resolve_enum(
+        enum_types.KeywordMatchTypeEnum.KeywordMatchType,
+        kw["match_type"],
+        "match_type",
+    )
 
-    criterion = AdGroupCriterion(
+    criterion = resource_types.AdGroupCriterion(
         ad_group=ad_group_resource_name,
         status=(
-            AdGroupCriterionStatusEnum.AdGroupCriterionStatus.ENABLED
+            enum_types.AdGroupCriterionStatusEnum.AdGroupCriterionStatus.ENABLED
         ),
-        keyword=KeywordInfo(text=kw["text"], match_type=match_type),
+        keyword=common_types.KeywordInfo(
+            text=kw["text"], match_type=match_type
+        ),
     )
-    operations.append(AdGroupCriterionOperation(create=criterion))
+    operations.append(
+        service_types.AdGroupCriterionOperation(create=criterion)
+    )
 
   try:
     response = service.mutate_ad_group_criteria(
@@ -411,9 +330,7 @@ def create_keywords(
   except GoogleAdsException as e:
     _handle_google_ads_error(e)
 
-  return {
-      "resource_names": [r.resource_name for r in response.results]
-  }
+  return {"resource_names": [r.resource_name for r in response.results]}
 
 
 @mcp.tool()
@@ -440,15 +357,17 @@ def create_negative_campaign_keywords(
 
   operations = []
   for kw_text in keywords:
-    criterion = CampaignCriterion(
+    criterion = resource_types.CampaignCriterion(
         campaign=campaign_resource_name,
         negative=True,
-        keyword=KeywordInfo(
+        keyword=common_types.KeywordInfo(
             text=kw_text,
-            match_type=KeywordMatchTypeEnum.KeywordMatchType.BROAD,
+            match_type=enum_types.KeywordMatchTypeEnum.KeywordMatchType.BROAD,
         ),
     )
-    operations.append(CampaignCriterionOperation(create=criterion))
+    operations.append(
+        service_types.CampaignCriterionOperation(create=criterion)
+    )
 
   try:
     response = service.mutate_campaign_criteria(
@@ -457,9 +376,7 @@ def create_negative_campaign_keywords(
   except GoogleAdsException as e:
     _handle_google_ads_error(e)
 
-  return {
-      "resource_names": [r.resource_name for r in response.results]
-  }
+  return {"resource_names": [r.resource_name for r in response.results]}
 
 
 @mcp.tool()
@@ -488,13 +405,15 @@ def create_geo_targeting(
   operations = []
   for geo_id in geo_target_constant_ids:
     resource_name = geo_svc.geo_target_constant_path(geo_id)
-    criterion = CampaignCriterion(
+    criterion = resource_types.CampaignCriterion(
         campaign=campaign_resource_name,
-        location=LocationInfo(
+        location=common_types.LocationInfo(
             geo_target_constant=resource_name,
         ),
     )
-    operations.append(CampaignCriterionOperation(create=criterion))
+    operations.append(
+        service_types.CampaignCriterionOperation(create=criterion)
+    )
 
   try:
     response = service.mutate_campaign_criteria(
@@ -503,9 +422,7 @@ def create_geo_targeting(
   except GoogleAdsException as e:
     _handle_google_ads_error(e)
 
-  return {
-      "resource_names": [r.resource_name for r in response.results]
-  }
+  return {"resource_names": [r.resource_name for r in response.results]}
 
 
 @mcp.tool()
@@ -532,7 +449,7 @@ def remove_campaign_criterion(
   resource_name = service.campaign_criterion_path(
       customer_id, campaign_id, criterion_id
   )
-  operation = CampaignCriterionOperation(remove=resource_name)
+  operation = service_types.CampaignCriterionOperation(remove=resource_name)
 
   try:
     response = service.mutate_campaign_criteria(
@@ -570,14 +487,16 @@ def exclude_geo_targets(
   operations = []
   for geo_id in geo_target_constant_ids:
     resource_name = geo_svc.geo_target_constant_path(geo_id)
-    criterion = CampaignCriterion(
+    criterion = resource_types.CampaignCriterion(
         campaign=campaign_resource_name,
         negative=True,
-        location=LocationInfo(
+        location=common_types.LocationInfo(
             geo_target_constant=resource_name,
         ),
     )
-    operations.append(CampaignCriterionOperation(create=criterion))
+    operations.append(
+        service_types.CampaignCriterionOperation(create=criterion)
+    )
 
   try:
     response = service.mutate_campaign_criteria(
@@ -586,9 +505,7 @@ def exclude_geo_targets(
   except GoogleAdsException as e:
     _handle_google_ads_error(e)
 
-  return {
-      "resource_names": [r.resource_name for r in response.results]
-  }
+  return {"resource_names": [r.resource_name for r in response.results]}
 
 
 @mcp.tool()
@@ -612,17 +529,15 @@ def update_campaign_status(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("CampaignService")
 
-  campaign = Campaign(
+  campaign = resource_types.Campaign(
       resource_name=campaign_resource_name,
       status=_resolve_enum(
-          CampaignStatusEnum.CampaignStatus, status, "status"
+          enum_types.CampaignStatusEnum.CampaignStatus, status, "status"
       ),
   )
 
-  operation = CampaignOperation(update=campaign)
-  operation.update_mask.CopyFrom(
-      field_mask_pb2.FieldMask(paths=["status"])
-  )
+  operation = service_types.CampaignOperation(update=campaign)
+  operation.update_mask.CopyFrom(field_mask_pb2.FieldMask(paths=["status"]))
 
   try:
     response = service.mutate_campaigns(
@@ -655,17 +570,15 @@ def update_ad_group_status(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("AdGroupService")
 
-  ad_group = AdGroup(
+  ad_group = resource_types.AdGroup(
       resource_name=ad_group_resource_name,
       status=_resolve_enum(
-          AdGroupStatusEnum.AdGroupStatus, status, "status"
+          enum_types.AdGroupStatusEnum.AdGroupStatus, status, "status"
       ),
   )
 
-  operation = AdGroupOperation(update=ad_group)
-  operation.update_mask.CopyFrom(
-      field_mask_pb2.FieldMask(paths=["status"])
-  )
+  operation = service_types.AdGroupOperation(update=ad_group)
+  operation.update_mask.CopyFrom(field_mask_pb2.FieldMask(paths=["status"]))
 
   try:
     response = service.mutate_ad_groups(
@@ -675,38 +588,6 @@ def update_ad_group_status(
     _handle_google_ads_error(e)
 
   return {"resource_name": response.results[0].resource_name}
-
-
-_POSITIVE_GEO_TARGET_MAP = {
-    "PRESENCE_OR_INTEREST": (
-        PositiveGeoTargetTypeEnum
-        .PositiveGeoTargetType
-        .PRESENCE_OR_INTEREST
-    ),
-    "SEARCH_INTEREST": (
-        PositiveGeoTargetTypeEnum
-        .PositiveGeoTargetType
-        .SEARCH_INTEREST
-    ),
-    "PRESENCE": (
-        PositiveGeoTargetTypeEnum
-        .PositiveGeoTargetType
-        .PRESENCE
-    ),
-}
-
-_NEGATIVE_GEO_TARGET_MAP = {
-    "PRESENCE_OR_INTEREST": (
-        NegativeGeoTargetTypeEnum
-        .NegativeGeoTargetType
-        .PRESENCE_OR_INTEREST
-    ),
-    "PRESENCE": (
-        NegativeGeoTargetTypeEnum
-        .NegativeGeoTargetType
-        .PRESENCE
-    ),
-}
 
 
 @mcp.tool()
@@ -752,44 +633,28 @@ def update_campaign_geo_target_type(
   ads_client = _get_client(login_customer_id)
   service = ads_client.get_service("CampaignService")
 
-  campaign = Campaign(resource_name=campaign_resource_name)
+  campaign = resource_types.Campaign(resource_name=campaign_resource_name)
   field_mask_paths = []
 
   if positive_geo_target_type:
-    pos_type = _POSITIVE_GEO_TARGET_MAP.get(
-        positive_geo_target_type.upper()
+    pos_type = _resolve_enum(
+        enum_types.PositiveGeoTargetTypeEnum.PositiveGeoTargetType,
+        positive_geo_target_type,
+        "positive_geo_target_type",
     )
-    if not pos_type:
-      raise ToolError(
-          f"Invalid positive_geo_target_type: "
-          f"{positive_geo_target_type}. "
-          "Use PRESENCE_OR_INTEREST, SEARCH_INTEREST, or PRESENCE."
-      )
-    campaign.geo_target_type_setting.positive_geo_target_type = (
-        pos_type
-    )
-    field_mask_paths.append(
-        "geo_target_type_setting.positive_geo_target_type"
-    )
+    campaign.geo_target_type_setting.positive_geo_target_type = pos_type
+    field_mask_paths.append("geo_target_type_setting.positive_geo_target_type")
 
   if negative_geo_target_type:
-    neg_type = _NEGATIVE_GEO_TARGET_MAP.get(
-        negative_geo_target_type.upper()
+    neg_type = _resolve_enum(
+        enum_types.NegativeGeoTargetTypeEnum.NegativeGeoTargetType,
+        negative_geo_target_type,
+        "negative_geo_target_type",
     )
-    if not neg_type:
-      raise ToolError(
-          f"Invalid negative_geo_target_type: "
-          f"{negative_geo_target_type}. "
-          "Use PRESENCE_OR_INTEREST or PRESENCE."
-      )
-    campaign.geo_target_type_setting.negative_geo_target_type = (
-        neg_type
-    )
-    field_mask_paths.append(
-        "geo_target_type_setting.negative_geo_target_type"
-    )
+    campaign.geo_target_type_setting.negative_geo_target_type = neg_type
+    field_mask_paths.append("geo_target_type_setting.negative_geo_target_type")
 
-  operation = CampaignOperation(update=campaign)
+  operation = service_types.CampaignOperation(update=campaign)
   operation.update_mask.CopyFrom(
       field_mask_pb2.FieldMask(paths=field_mask_paths)
   )
