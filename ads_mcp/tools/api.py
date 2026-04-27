@@ -26,6 +26,8 @@ from google.ads.googleads.util import get_nested_attr
 from google.ads.googleads.v24.services.services.customer_service import CustomerServiceClient
 from google.ads.googleads.v24.services.services.google_ads_service import GoogleAdsServiceClient
 from google.oauth2.credentials import Credentials
+from google.protobuf.json_format import MessageToDict
+from google.protobuf.message import Message as ProtobufMessage
 import proto
 import yaml
 
@@ -109,12 +111,19 @@ def format_value(value: Any) -> Any:
   if isinstance(value, proto.marshal.collections.repeated.Repeated):
     return_value = [format_value(i) for i in value]
   elif isinstance(value, proto.Message):
-    # covert to json first to avoid serialization issues
+    # convert to json first to avoid serialization issues
     return_value = proto.Message.to_json(
         value,
         use_integers_for_enums=False,
     )
     return_value = json.loads(return_value)
+  elif isinstance(value, ProtobufMessage):
+    # Handle raw google.protobuf types (e.g. FieldMask from
+    # change_event.changed_fields) that are not proto-plus messages.
+    return_value = MessageToDict(
+        value,
+        preserving_proto_field_name=True,
+    )
   elif isinstance(value, proto.Enum):
     return_value = value.name
   else:
