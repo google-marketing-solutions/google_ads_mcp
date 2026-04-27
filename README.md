@@ -2,7 +2,8 @@
 
 The Google Ads MCP Server is an implementation of the Model Context Protocol (MCP) that enables Large Language Models (LLMs), such as Gemini, to interact directly with the Google Ads API.
 
-**This is not an officially supported Google product.**
+> [!NOTE]
+> This is NOT an officially supported Google product. It is mainly for experimental purposes and not intended for production use. Consider using the official [Google Ads MCP Server](https://github.com/google-ads/google-ads-mcp-python) instead.
 
 ## Disclaimer
 
@@ -43,7 +44,15 @@ Make sure your `google-ads.yaml` file contains the following keys:
 - `developer_token`
 - `login_customer_id` (optional, but recommended)
 
-### 3. Launch MCP Server
+### 3. Configuration
+
+The server can be configured using the following environment variables:
+
+- `ADS_MCP_ENABLE_MUTATIONS`: Set to `true` to enable mutation tools. Defaults to `false`.
+- `GOOGLE_ADS_CREDENTIALS`: Path to the `google-ads.yaml` file.
+- `USE_GOOGLE_OAUTH_ACCESS_TOKEN`: Set to enable Google OAuth token verification.
+
+### 4. Launch MCP Server
 
 #### For Direct Use with Gemini CLI
 
@@ -52,22 +61,22 @@ Update your Gemini configuration to include the `google-ads-mcp` server. The fol
 ```json5
 {
   // Other configs...
-  "mcpServers": {
-    "GoogleAds": {
-      "command": "pipx",
-      "args": [
+  mcpServers: {
+    GoogleAds: {
+      command: "pipx",
+      args: [
         "run",
         "--spec",
         "git+https://github.com/google-marketing-solutions/google_ads_mcp.git",
-        "run-mcp-server"
+        "run-mcp-server",
       ],
-      "env": {
-        "GOOGLE_ADS_CREDENTIALS": "PATH_TO_YAML"
+      env: {
+        GOOGLE_ADS_CREDENTIALS: "PATH_TO_YAML",
       },
-      "timeout": 30000,
-      "trust": false
-    }
-  }
+      timeout: 30000,
+      trust: false,
+    },
+  },
 }
 ```
 
@@ -80,21 +89,15 @@ Update your Gemini configuration to include the `google-ads-mcp` server. `[DIREC
 ```json5
 {
   // Other configs...
-  "mcpServers": {
-    "GoogleAds": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "[DIRECTORY]",
-        "-m",
-        "ads_mcp.server"
-      ],
-      "cwd": "[DIRECTORY]",
-      "timeout": 30000,
-      "trust": false
-    }
-  }
+  mcpServers: {
+    GoogleAds: {
+      command: "uv",
+      args: ["run", "--directory", "[DIRECTORY]", "-m", "ads_mcp.server"],
+      cwd: "[DIRECTORY]",
+      timeout: 30000,
+      trust: false,
+    },
+  },
 }
 ```
 
@@ -115,6 +118,26 @@ uv run -m ads_mcp.server
 ```
 
 The server will start and be ready to accept requests.
+
+## Features and Tools
+
+The server exposes tools for interacting with Google Ads. Some tools are read-only, while others allow mutations (modifications).
+
+### Read-Only Tools (Always Available)
+
+- **GAQL Execution**: Query Google Ads data using GAQL.
+- **Account Management**: List accessible accounts.
+- **Documentation**: Access documentation for GAQL and reporting views.
+
+### Mutation Tools (Disabled by Default)
+
+To enable these tools, set `ADS_MCP_ENABLE_MUTATIONS=true`.
+
+- **Campaign Budgets**: Create campaign budgets.
+- **Campaigns**: Create campaigns.
+- **Ad Groups**: Create ad groups.
+- **Ads**: Create ads.
+- **Criteria**: Create criteria (e.g., keywords).
 
 ## Contributing
 

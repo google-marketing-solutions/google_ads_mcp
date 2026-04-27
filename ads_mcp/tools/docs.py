@@ -17,11 +17,10 @@
 import os
 from typing import Any
 
-import yaml
-
 from ads_mcp.coordinator import mcp_server as mcp
 from ads_mcp.utils import MODULE_DIR
 from fastmcp.exceptions import ToolError
+import yaml
 
 
 def _get_gaql_doc_content() -> str:
@@ -89,7 +88,7 @@ def get_reporting_view_doc(view: str | None = None) -> str:
 
   Args:
       view: (Optional) The name of the view resource. If not set, a doc briefs
-      all views will be returned.
+        all views will be returned.
   """
   if view:
     return _get_view_doc_content(view)

@@ -15,26 +15,41 @@
 """The server for the Google Ads API MCP."""
 
 import asyncio
+import os
+import sys
 
 from ads_mcp.coordinator import mcp_server
 from ads_mcp.scripts.generate_views import update_views_yaml
-from ads_mcp.tools import api
+from ads_mcp.tools import accounts
 from ads_mcp.tools import docs
-from ads_mcp.tools import mutations
-
+from ads_mcp.tools import reporting
+from ads_mcp.tools._utils import get_ads_client
 import dotenv
 
 dotenv.load_dotenv()
 
 
-tools = [api, docs, mutations]
+tools = [reporting, accounts, docs]
+
+if os.getenv("ADS_MCP_ENABLE_MUTATIONS", "false").lower() == "true":
+  from ads_mcp.tools import mutations  # pylint: disable=ungrouped-imports
+
+  tools.extend(
+      [
+          mutations.budget,
+          mutations.campaign,
+          mutations.ad_group,
+          mutations.ad,
+          mutations.criterion,
+      ]
+  )
 
 
 def main():
   """Initializes and runs the MCP server."""
   asyncio.run(update_views_yaml())  # Check and update docs resource
-  api.get_ads_client()  # Check Google Ads credentials
-  print("mcp server starting...")
+  get_ads_client()  # Check Google Ads credentials
+  print("mcp server starting...", file=sys.stderr)
   mcp_server.run(
       transport="stdio",
       show_banner=False,

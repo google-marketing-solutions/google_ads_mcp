@@ -579,7 +579,7 @@ wheels = [
 
 [[package]]
 name = "google-ads-mcp"
-version = "0.7.0"
+version = "0.7.1"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
