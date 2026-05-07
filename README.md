@@ -26,7 +26,7 @@ This project uses [`uv`](https://github.com/astral-sh/uv) for dependency managem
 Install `uv` and then run the following command to install the required Python packages:
 
 ```bash
-uv pip sync
+uv sync
 ```
 
 ### 2. Configure Google Ads credentials
