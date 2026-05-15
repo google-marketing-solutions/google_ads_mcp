@@ -36,7 +36,13 @@ It exposes several MCP tools and resources:
     *   `context/`: Context resources.
         *   `GAQL.md`: GAQL grammar documentation.
         *   `views/`: YAML definitions for reporting views.
+*   `api_examples/`: Google Ads API request/response examples (from Developer Assistant).
+*   `client_libs/`: Local clones of Google Ads client libraries for context.
+*   `saved/`: Directory for code, csv, and diagnostic data.
 *   `tests/`: Test suite mirroring the source structure.
+
+## Google Ads API Developer Assistant
+This project integrates the **Google Ads API Developer Assistant**. Detailed operational guidelines, GAQL validation protocols, and code generation rules are defined in `DEV_ASSISTANT_GEMINI.md`. All interactions regarding direct API queries or script generation MUST adhere to those directives.
 *   `pyproject.toml`: Project configuration and dependencies.
 *   `LLM.md`: Specific instructions for LLM agents.
 

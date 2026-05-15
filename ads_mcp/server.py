@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """The server for the Google Ads API MCP."""
+import argparse
 import asyncio
 import os
 
@@ -46,13 +47,39 @@ if os.getenv("FASTMCP_SERVER_AUTH_GOOGLE_CLIENT_ID") and os.getenv(
 
 def main():
   """Initializes and runs the MCP server."""
+  parser = argparse.ArgumentParser(
+      description="Run the Google Ads API MCP server."
+  )
+  parser.add_argument(
+      "--transport",
+      choices=["stdio", "sse"],
+      default="sse",
+      help="The transport to use (default: sse)",
+  )
+  parser.add_argument(
+      "--port",
+      type=int,
+      default=8000,
+      help="The port to use for SSE transport (default: 8000)",
+  )
+  args = parser.parse_args()
+
   asyncio.run(update_views_yaml())  # Check and update docs resource
   api.get_ads_client()  # Check Google Ads credentials
-  print("mcp server starting...")
-  mcp_server.run(
-      transport="streamable-http",
-      show_banner=False,
-  )  # Initialize and run the server
+
+  # FastMCP expects 'streamable-http' for SSE
+  run_transport = "streamable-http" if args.transport == "sse" else "stdio"
+
+  print(f"mcp server starting with transport: {args.transport}...")
+  
+  run_kwargs = {
+      "transport": run_transport,
+      "show_banner": False,
+  }
+  if args.transport == "sse":
+    run_kwargs["port"] = args.port
+
+  mcp_server.run(**run_kwargs)  # Initialize and run the server
 
 
 if __name__ == "__main__":
